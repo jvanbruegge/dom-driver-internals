@@ -1,10 +1,12 @@
+# <span class="yellow">Internals of a framework</span>
+
 <style>
 .yellow {
     color: yellow;
 }
 </style>
 
-# <span class="yellow">Internals of a framework</span>
+
 
 The why and how of the new Cycle.js DOM driver
 
@@ -16,6 +18,6 @@ The why and how of the new Cycle.js DOM driver
 
 ----
 
-## <span class="yellow">The reason</span> - CSS classes on the DOM
+## <span class="yellow">The reason</span> - CSS classes
 
 ![](images/reason.png)

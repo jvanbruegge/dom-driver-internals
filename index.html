@@ -7,24 +7,24 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link rel="stylesheet" href="https://lab.hakim.se/reveal-js/css/reveal.css">
+  <link rel="stylesheet" href="./reveal.js/css/reveal.css">
   <style type="text/css">
       code{white-space: pre-wrap;}
       span.smallcaps{font-variant: small-caps;}
       span.underline{text-decoration: underline;}
       div.column{display: inline-block; vertical-align: top; width: 50%;}
   </style>
-  <link rel="stylesheet" href="https://lab.hakim.se/reveal-js/css/theme/black.css" id="theme">
+  <link rel="stylesheet" href="./reveal.js/css/theme/black.css" id="theme">
   <!-- Printing and PDF exports -->
   <script>
     var link = document.createElement( 'link' );
     link.rel = 'stylesheet';
     link.type = 'text/css';
-    link.href = window.location.search.match( /print-pdf/gi ) ? 'https://lab.hakim.se/reveal-js/css/print/pdf.css' : 'https://lab.hakim.se/reveal-js/css/print/paper.css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? './reveal.js/css/print/pdf.css' : './reveal.js/css/print/paper.css';
     document.getElementsByTagName( 'head' )[0].appendChild( link );
   </script>
   <!--[if lt IE 9]>
-  <script src="https://lab.hakim.se/reveal-js/lib/js/html5shiv.js"></script>
+  <script src="./reveal.js/lib/js/html5shiv.js"></script>
   <![endif]-->
 </head>
 <body>
@@ -32,16 +32,13 @@
     <div class="slides">
 
 
-<section class="slide level1">
-
+<section id="internals-of-a-framework" class="slide level1">
+<h1><span class="yellow">Internals of a framework</span></h1>
 <style>
 .yellow {
     color: yellow;
 }
 </style>
-</section>
-<section id="internals-of-a-framework" class="slide level1">
-<h1><span class="yellow">Internals of a framework</span></h1>
 <p>The why and how of the new Cycle.js DOM driver</p>
 </section>
 <section class="slide level1">
@@ -51,14 +48,14 @@
 </section>
 <section class="slide level1">
 
-<h2 id="the-reason---css-classes-on-the-dom"><span class="yellow">The reason</span> - CSS classes on the DOM</h2>
+<h2 id="the-reason---css-classes"><span class="yellow">The reason</span> - CSS classes</h2>
 <p><img data-src="images/reason.png" /></p>
 </section>
     </div>
   </div>
 
-  <script src="https://lab.hakim.se/reveal-js/lib/js/head.min.js"></script>
-  <script src="https://lab.hakim.se/reveal-js/js/reveal.js"></script>
+  <script src="./reveal.js/lib/js/head.min.js"></script>
+  <script src="./reveal.js/js/reveal.js"></script>
 
   <script>
 
@@ -70,9 +67,9 @@
 
         // Optional reveal.js plugins
         dependencies: [
-          { src: 'https://lab.hakim.se/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
-          { src: 'https://lab.hakim.se/reveal-js/plugin/zoom-js/zoom.js', async: true },
-          { src: 'https://lab.hakim.se/reveal-js/plugin/notes/notes.js', async: true }
+          { src: './reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: './reveal.js/plugin/zoom-js/zoom.js', async: true },
+          { src: './reveal.js/plugin/notes/notes.js', async: true }
         ]
       });
     </script>
