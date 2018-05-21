@@ -16,4 +16,6 @@ The why and how of the new Cycle.js DOM driver
 
 ----
 
-## <span class="yellow">The reason</span> - 
+## <span class="yellow">The reason</span> - CSS classes on the DOM
+
+![](images/reason.png)
