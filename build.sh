@@ -1,3 +1,3 @@
 #!/bin/bash
 
-pandoc -t revealjs -s -o index.html README.md -V revealjs-url=./reveal.js
+pandoc -t revealjs -s --highlight-style breezeDark -o index.html README.md -V revealjs-url=./reveal.js
