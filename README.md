@@ -1,5 +1,3 @@
-# <span class="yellow">Internals of a framework</span>
-
 <style>
 .yellow {
     color: yellow;
@@ -10,13 +8,19 @@ div.sourceCode {
 .reveal pre code {
     max-height: 100% !important;
 }
+div.slides {
+    width: 1050px !important;
+}
 </style>
+
+# <span class="yellow">Internals of a framework</span>
+
 
 The why and how of the new Cycle.js DOM driver
 
 ----
 
-## What is isolation?
+## <span class="yellow">What</span> is isolation?
 
 ```js
 function Counter(sources) {
@@ -42,7 +46,7 @@ function Counter(sources) {
 
 ----
 
-## What is isolation?
+## <span class="yellow">What</span> is isolation?
 
 ```js
 function Main(sources) {
@@ -66,7 +70,7 @@ function Main(sources) {
 
 ----
 
-## Reason
+## <span class="yellow">Reason</span>
 
 ```js
 function Counter(sources) {
@@ -81,7 +85,7 @@ function Counter(sources) {
 
 ----
 
-## Solution: Isolation!
+## Solution: <span class="yellow">Isolation!</span>
 
 ```diff
 function Main(sources) {
@@ -101,13 +105,13 @@ function Main(sources) {
 
 ----
 
-## Solution: Isolation!
+## Solution: <span class="yellow">Isolation!</span>
 
 ![](images/dom_with_isolation.svg)
 
 ----
 
-## Total isolation
+## <span class="yellow">Total</span> isolation
 
 > - Yellow div: no events
 > - Green div: events from both child buttons
@@ -117,7 +121,7 @@ function Main(sources) {
 
 ----
 
-## Sibling isolation
+## <span class="yellow">Sibling</span> isolation
 
 > - Yellow div: all events
 > - Green div: events from both child buttons
@@ -152,3 +156,95 @@ function Main(sources) {
 > - Improve performance (or at least keep it on par)
 
 ----
+
+## Rewriting everything <span class="yellow">step</span> by <span class="yellow">step</span>
+
+----
+
+## Step one: <span class="yellow">Rendering</span>
+
+> - Solved Problem: VDOM Diffing
+> - [Snabbdom](https://github.com/snabbdom/snabbdom)
+> - `patch :: VDOM -> IO ()`, updates existing DOM to match VDOM
+
+----
+
+## Step two: Isolation <span class="yellow">scopes</span>
+
+- <span class="yellow">Where</span> can we actually do something?
+
+```js
+const isolatedComponent = isolate(Component, scope);
+
+// If isolation was just for the DOM
+function isolate(component, scope) {
+    return function(sources) {
+        const newSource = sources.DOM
+            .isolateSource(sources.DOM, scope);
+        const sinks = component({
+            ...sources,
+            DOM: newSource
+        });
+        return {
+            ...sinks,
+            DOM: sources.DOM.isolateSink(sinks.DOM, scope)
+        };
+    }
+}
+```
+
+----
+
+## Step two: Isolation <span class="yellow">scopes</span>
+
+- <span class="yellow">Where</span> can we actually do something?
+
+```js
+isolateSource :: (SourceObj, Scope) -> SourceObj
+
+isolateSink :: (Stream VDOM, Scope) -> Stream VDOM
+```
+
+----
+
+## Step two: Isolation <span class="yellow">scopes</span>
+
+- Idea: Save <span class="yellow">namespace</span> in source and in output VDOM
+
+```js
+class DOMSource
+    constructor(namespace) {
+        this.namespace = namespace;
+    }
+
+    function isolateSource(oldSource, scope) {
+        return new DOMSource(oldSource.namespace.concat(scope));
+    }
+
+    function isolateSink(sinkStream, scope) {
+        return sinkStream.map(rootNode => ({
+            ...rootNode,
+            data: {
+                ...rootNode.data,
+                isolate: this.namespace.concat(scope)
+            }
+        }));
+    }
+}
+```
+
+----
+
+# Step three: <span class="yellow">Event management</span>
+
+----
+
+## Building the <span class="yellow">bridge</span> between APIs
+
+> - The DOM API for <span class="yellow">events</span> looks like `element.addEventListener(type, callback)`
+> - We want it to look like `sources.DOM.events(type)`
+> - We want events not to <span class="yellow">bubble</span> outside of their scopes
+
+----
+
+## Bubbling 

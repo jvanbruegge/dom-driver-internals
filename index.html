@@ -100,8 +100,8 @@ code span.wa { color: #da4453; } /* Warning */
     <div class="slides">
 
 
-<section id="internals-of-a-framework" class="slide level1">
-<h1><span class="yellow">Internals of a framework</span></h1>
+<section class="slide level1">
+
 <style>
 .yellow {
     color: yellow;
@@ -112,12 +112,18 @@ div.sourceCode {
 .reveal pre code {
     max-height: 100% !important;
 }
+div.slides {
+    width: 1050px !important;
+}
 </style>
+</section>
+<section id="internals-of-a-framework" class="slide level1">
+<h1><span class="yellow">Internals of a framework</span></h1>
 <p>The why and how of the new Cycle.js DOM driver</p>
 </section>
 <section class="slide level1">
 
-<h2 id="what-is-isolation">What is isolation?</h2>
+<h2 id="what-is-isolation"><span class="yellow">What</span> is isolation?</h2>
 <div class="sourceCode" id="cb1"><pre class="sourceCode js"><code class="sourceCode javascript"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">function</span> <span class="at">Counter</span>(sources) <span class="op">{</span></a>
 <a class="sourceLine" id="cb1-2" data-line-number="2">    <span class="kw">const</span> increment$ <span class="op">=</span> <span class="va">sources</span>.<span class="va">DOM</span>.<span class="at">select</span>(<span class="st">&#39;.increment&#39;</span>)</a>
 <a class="sourceLine" id="cb1-3" data-line-number="3">        .<span class="at">events</span>(<span class="st">&#39;click&#39;</span>).<span class="at">mapTo</span>(<span class="op">+</span><span class="dv">1</span>)<span class="op">;</span></a>
@@ -140,7 +146,7 @@ div.sourceCode {
 </section>
 <section class="slide level1">
 
-<h2 id="what-is-isolation-1">What is isolation?</h2>
+<h2 id="what-is-isolation-1"><span class="yellow">What</span> is isolation?</h2>
 <div class="sourceCode" id="cb2"><pre class="sourceCode js"><code class="sourceCode javascript"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">function</span> <span class="at">Main</span>(sources) <span class="op">{</span></a>
 <a class="sourceLine" id="cb2-2" data-line-number="2">    <span class="kw">const</span> counter1 <span class="op">=</span> <span class="at">Counter</span>(sources)<span class="op">;</span></a>
 <a class="sourceLine" id="cb2-3" data-line-number="3">    <span class="kw">const</span> counter2 <span class="op">=</span> <span class="at">Counter</span>(sources)<span class="op">;</span></a>
@@ -160,7 +166,7 @@ div.sourceCode {
 </section>
 <section class="slide level1">
 
-<h2 id="reason">Reason</h2>
+<h2 id="reason"><span class="yellow">Reason</span></h2>
 <div class="sourceCode" id="cb3"><pre class="sourceCode js"><code class="sourceCode javascript"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">function</span> <span class="at">Counter</span>(sources) <span class="op">{</span></a>
 <a class="sourceLine" id="cb3-2" data-line-number="2">    <span class="kw">const</span> increment$ <span class="op">=</span> <span class="va">sources</span>.<span class="va">DOM</span>.<span class="at">select</span>(<span class="st">&#39;.increment&#39;</span>)</a>
 <a class="sourceLine" id="cb3-3" data-line-number="3">        .<span class="at">events</span>(<span class="st">&#39;click&#39;</span>).<span class="at">mapTo</span>(<span class="op">+</span><span class="dv">1</span>)<span class="op">;</span></a>
@@ -171,7 +177,7 @@ div.sourceCode {
 </section>
 <section class="slide level1">
 
-<h2 id="solution-isolation">Solution: Isolation!</h2>
+<h2 id="solution-isolation">Solution: <span class="yellow">Isolation!</span></h2>
 <div class="sourceCode" id="cb4"><pre class="sourceCode diff"><code class="sourceCode diff"><a class="sourceLine" id="cb4-1" data-line-number="1">function Main(sources) {</a>
 <a class="sourceLine" id="cb4-2" data-line-number="2"><span class="st">-    const counter1 = Counter(sources);</span></a>
 <a class="sourceLine" id="cb4-3" data-line-number="3"><span class="va">+    const counter1 = isolate(Counter, &#39;counter1&#39;)(sources);</span></a>
@@ -188,12 +194,12 @@ div.sourceCode {
 </section>
 <section class="slide level1">
 
-<h2 id="solution-isolation-1">Solution: Isolation!</h2>
+<h2 id="solution-isolation-1">Solution: <span class="yellow">Isolation!</span></h2>
 <p><img data-src="images/dom_with_isolation.svg" /></p>
 </section>
 <section class="slide level1">
 
-<h2 id="total-isolation">Total isolation</h2>
+<h2 id="total-isolation"><span class="yellow">Total</span> isolation</h2>
 <ul>
 <li class="fragment">Yellow div: no events</li>
 <li class="fragment">Green div: events from both child buttons</li>
@@ -203,7 +209,7 @@ div.sourceCode {
 </section>
 <section class="slide level1">
 
-<h2 id="sibling-isolation">Sibling isolation</h2>
+<h2 id="sibling-isolation"><span class="yellow">Sibling</span> isolation</h2>
 <ul>
 <li class="fragment">Yellow div: all events</li>
 <li class="fragment">Green div: events from both child buttons</li>
@@ -238,6 +244,88 @@ div.sourceCode {
 </section>
 <section class="slide level1">
 
+<h2 id="rewriting-everything-step-by-step">Rewriting everything <span class="yellow">step</span> by <span class="yellow">step</span></h2>
+</section>
+<section class="slide level1">
+
+<h2 id="step-one-rendering">Step one: <span class="yellow">Rendering</span></h2>
+<ul>
+<li class="fragment">Solved Problem: VDOM Diffing</li>
+<li class="fragment"><a href="https://github.com/snabbdom/snabbdom">Snabbdom</a></li>
+<li class="fragment"><code>patch :: VDOM -&gt; IO ()</code>, updates existing DOM to match VDOM</li>
+</ul>
+</section>
+<section class="slide level1">
+
+<h2 id="step-two-isolation-scopes">Step two: Isolation <span class="yellow">scopes</span></h2>
+<ul>
+<li><span class="yellow">Where</span> can we actually do something?</li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="sourceCode js"><code class="sourceCode javascript"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">const</span> isolatedComponent <span class="op">=</span> <span class="at">isolate</span>(Component<span class="op">,</span> scope)<span class="op">;</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co">// If isolation was just for the DOM</span></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="kw">function</span> <span class="at">isolate</span>(component<span class="op">,</span> scope) <span class="op">{</span></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">    <span class="cf">return</span> <span class="kw">function</span>(sources) <span class="op">{</span></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">        <span class="kw">const</span> newSource <span class="op">=</span> <span class="va">sources</span>.<span class="at">DOM</span></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">            .<span class="at">isolateSource</span>(<span class="va">sources</span>.<span class="at">DOM</span><span class="op">,</span> scope)<span class="op">;</span></a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">        <span class="kw">const</span> sinks <span class="op">=</span> <span class="at">component</span>(<span class="op">{</span></a>
+<a class="sourceLine" id="cb5-9" data-line-number="9">            ...<span class="at">sources</span><span class="op">,</span></a>
+<a class="sourceLine" id="cb5-10" data-line-number="10">            <span class="dt">DOM</span><span class="op">:</span> newSource</a>
+<a class="sourceLine" id="cb5-11" data-line-number="11">        <span class="op">}</span>)<span class="op">;</span></a>
+<a class="sourceLine" id="cb5-12" data-line-number="12">        <span class="cf">return</span> <span class="op">{</span></a>
+<a class="sourceLine" id="cb5-13" data-line-number="13">            ...<span class="at">sinks</span><span class="op">,</span></a>
+<a class="sourceLine" id="cb5-14" data-line-number="14">            <span class="dt">DOM</span><span class="op">:</span> <span class="va">sources</span>.<span class="va">DOM</span>.<span class="at">isolateSink</span>(<span class="va">sinks</span>.<span class="at">DOM</span><span class="op">,</span> scope)</a>
+<a class="sourceLine" id="cb5-15" data-line-number="15">        <span class="op">};</span></a>
+<a class="sourceLine" id="cb5-16" data-line-number="16">    <span class="op">}</span></a>
+<a class="sourceLine" id="cb5-17" data-line-number="17"><span class="op">}</span></a></code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="step-two-isolation-scopes-1">Step two: Isolation <span class="yellow">scopes</span></h2>
+<ul>
+<li><span class="yellow">Where</span> can we actually do something?</li>
+</ul>
+<div class="sourceCode" id="cb6"><pre class="sourceCode js"><code class="sourceCode javascript"><a class="sourceLine" id="cb6-1" data-line-number="1">isolateSource <span class="op">::</span> (SourceObj<span class="op">,</span> Scope) <span class="op">-&gt;</span> SourceObj</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">isolateSink <span class="op">::</span> (Stream VDOM<span class="op">,</span> Scope) <span class="op">-&gt;</span> Stream VDOM</a></code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="step-two-isolation-scopes-2">Step two: Isolation <span class="yellow">scopes</span></h2>
+<ul>
+<li>Idea: Save <span class="yellow">namespace</span> in source and in output VDOM</li>
+</ul>
+<div class="sourceCode" id="cb7"><pre class="sourceCode js"><code class="sourceCode javascript"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">class</span> DOMSource</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">    <span class="at">constructor</span>(namespace) <span class="op">{</span></a>
+<a class="sourceLine" id="cb7-3" data-line-number="3">        <span class="kw">this</span>.<span class="at">namespace</span> <span class="op">=</span> namespace<span class="op">;</span></a>
+<a class="sourceLine" id="cb7-4" data-line-number="4">    <span class="op">}</span></a>
+<a class="sourceLine" id="cb7-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb7-6" data-line-number="6">    <span class="kw">function</span> <span class="at">isolateSource</span>(oldSource<span class="op">,</span> scope) <span class="op">{</span></a>
+<a class="sourceLine" id="cb7-7" data-line-number="7">        <span class="cf">return</span> <span class="kw">new</span> <span class="at">DOMSource</span>(<span class="va">oldSource</span>.<span class="va">namespace</span>.<span class="at">concat</span>(scope))<span class="op">;</span></a>
+<a class="sourceLine" id="cb7-8" data-line-number="8">    <span class="op">}</span></a>
+<a class="sourceLine" id="cb7-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb7-10" data-line-number="10">    <span class="kw">function</span> <span class="at">isolateSink</span>(sinkStream<span class="op">,</span> scope) <span class="op">{</span></a>
+<a class="sourceLine" id="cb7-11" data-line-number="11">        <span class="cf">return</span> <span class="va">sinkStream</span>.<span class="at">map</span>(rootNode <span class="op">=&gt;</span> (<span class="op">{</span></a>
+<a class="sourceLine" id="cb7-12" data-line-number="12">            ...<span class="at">rootNode</span><span class="op">,</span></a>
+<a class="sourceLine" id="cb7-13" data-line-number="13">            <span class="dt">data</span><span class="op">:</span> <span class="op">{</span></a>
+<a class="sourceLine" id="cb7-14" data-line-number="14">                ...<span class="va">rootNode</span>.<span class="at">data</span><span class="op">,</span></a>
+<a class="sourceLine" id="cb7-15" data-line-number="15">                <span class="dt">isolate</span><span class="op">:</span> <span class="kw">this</span>.<span class="va">namespace</span>.<span class="at">concat</span>(scope)</a>
+<a class="sourceLine" id="cb7-16" data-line-number="16">            <span class="op">}</span></a>
+<a class="sourceLine" id="cb7-17" data-line-number="17">        <span class="op">}</span>))<span class="op">;</span></a>
+<a class="sourceLine" id="cb7-18" data-line-number="18">    <span class="op">}</span></a>
+<a class="sourceLine" id="cb7-19" data-line-number="19">}</a></code></pre></div>
+</section>
+<section id="step-three-event-management" class="slide level1">
+<h1>Step three: <span class="yellow">Event management</span></h1>
+</section>
+<section class="slide level1">
+
+<h2 id="building-the-bridge-between-apis">Building the <span class="yellow">bridge</span> between APIs</h2>
+<ul>
+<li class="fragment">The DOM API for <span class="yellow">events</span> looks like <code>element.addEventListener(type, callback)</code></li>
+<li class="fragment">We want it to look like <code>sources.DOM.events(type)</code></li>
+<li class="fragment">We want events not to <span class="yellow">bubble</span> outside of their scopes</li>
+</ul>
 </section>
     </div>
   </div>
