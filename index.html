@@ -100,8 +100,8 @@ code span.wa { color: #da4453; } /* Warning */
     <div class="slides">
 
 
-<section class="slide level1">
-
+<section id="internals-of-a-framework" class="slide level1">
+<h1><span class="yellow">Internals of a framework</span></h1>
 <style>
 .yellow {
     color: yellow;
@@ -116,9 +116,6 @@ div.slides {
     width: 1050px !important;
 }
 </style>
-</section>
-<section id="internals-of-a-framework" class="slide level1">
-<h1><span class="yellow">Internals of a framework</span></h1>
 <p>The why and how of the new Cycle.js DOM driver</p>
 </section>
 <section class="slide level1">
@@ -422,6 +419,8 @@ img[src="images/event_handling_3.svg"] {
       // Full list of configuration options available at:
       // https://github.com/hakimel/reveal.js#configuration
       Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: true,
         // Push each slide change to the browser history
         history: true,
 

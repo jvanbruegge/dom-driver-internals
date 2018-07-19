@@ -1,3 +1,5 @@
+# <span class="yellow">Internals of a framework</span>
+
 <style>
 .yellow {
     color: yellow;
@@ -12,9 +14,6 @@ div.slides {
     width: 1050px !important;
 }
 </style>
-
-# <span class="yellow">Internals of a framework</span>
-
 
 The why and how of the new Cycle.js DOM driver
 
