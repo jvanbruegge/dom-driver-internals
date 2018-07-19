@@ -300,9 +300,9 @@ const isolateModule = {
 
 ## <span class="yellow">Data structures</span> to the rescue
 
-> - We need to save our virtual event listeners
-> - And the `Namespace -> Element` mapping
-> - Efficiently
+> - We need to save our <span class="yellow">virtual</span> event listeners
+> - And the `Namespace -> Element` <span class="yellow">mapping</span>
+> - <span class="yellow">Efficiently</span>
 
 ----
 
