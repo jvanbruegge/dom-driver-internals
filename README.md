@@ -347,3 +347,11 @@ img[src="images/event_handling_3.svg"] {
 - Slide repo: [https://github.com/jvanbruegge/dom-driver-internals](https://github.com/jvanbruegge/dom-driver-internals)
 - Cycle.js: [https://github.com/cyclejs/cyclejs](https://github.com/cyclejs/cyclejs)
 - Cycle.js & React compatibility <span class="yellow">(NEW!)</span>: [https://staltz.com/use-react-in-cyclejs-and-vice-versa.html](https://staltz.com/use-react-in-cyclejs-and-vice-versa.html)
+
+----
+
+## Come to <span class="yellow">CycleConf</span>!
+
+- 17th - 19th of October
+- Copenhagen
+- [http://cycleconf.com/](http://cycleconf.com/)
