@@ -157,34 +157,79 @@ function Main(sources) {
 
 ----
 
-## Rewriting everything <span class="yellow">step</span> by <span class="yellow">step</span>
+## Rewriting - <span class="yellow">Data structure</span> first
+
+<span class="yellow">What</span> do we need to know <span class="yellow">where</span> and <span class="yellow">when</span>?
+
+How can we <span class="yellow">optimze</span> for that?
 
 ----
 
-## Step one: <span class="yellow">Rendering</span>
+## Short digression - Event <span class="yellow">bubbling</span>
 
-> - Solved Problem: VDOM Diffing
-> - [Snabbdom](https://github.com/snabbdom/snabbdom)
-> - `patch :: VDOM -> IO ()`, updates existing DOM to match VDOM
+![](images/bubbling_total_isolation.svg)
 
 ----
 
-## Step two: Isolation <span class="yellow">scopes</span>
+## Short digression - Event <span class="yellow">bubbling</span>
 
-- <span class="yellow">Where</span> can we actually do something?
+![](images/bubbling_sibling_isolation.svg)
+
+----
+
+## Start bottom up
+
+> - What do we <span class="yellow">have</span> to work with?
+> - `element.addEventListener(type, callback)`
+> - can't use <span class="yellow">native bubbling</span>: `root.addEventListener(type, callback)`
+
+----
+
+## Start <span class="yellow">bottom up</span>
+
+> - <span class="yellow">When</span> an event is triggered, <span class="yellow">what</span> do we know?
+> - `callback :: Event -> IO ()`
+> - We can get the <span class="yellow">element</span> the event was triggered on
+> - How to know the right <span class="yellow">isolation scope</span>?
+> - We need a <span class="yellow">mapping</span> `Element -> namespace`
+
+----
+
+## <span class="yellow">Hooking</span> into the VDOM
+
+Solution: <span class="yellow">Snabbdom modules</span>
 
 ```js
-const isolatedComponent = isolate(Component, scope);
+var myModule = {
+  create: function(emptyVnode, vnode) {
+    // invoked whenever a new virtual node is created
+    // the actual DOM element is under vnode.elm
+  },
+  update: function(oldVnode, vnode) {
+    // invoked whenever a virtual node is updated
+  },
+  delete: function(vnode) {
+    // invoken whenever a DOM node is removed
+  }
+};
+```
+We need to <span class="yellow">attach</span> the isolation scope to the <span class="yellow">vnode</span>
 
-// If isolation was just for the DOM
+----
+
+## <span class="yellow">Where</span> can we do that?
+
+```js
 function isolate(component, scope) {
     return function(sources) {
-        const newSource = sources.DOM
+        const newDom = sources.DOM
             .isolateSource(sources.DOM, scope);
+
         const sinks = component({
             ...sources,
-            DOM: newSource
+            DOM: newDOM
         });
+
         return {
             ...sinks,
             DOM: sources.DOM.isolateSink(sinks.DOM, scope)
@@ -195,34 +240,20 @@ function isolate(component, scope) {
 
 ----
 
-## Step two: Isolation <span class="yellow">scopes</span>
-
-- <span class="yellow">Where</span> can we actually do something?
+## <span class="yellow">Where</span> can we do that?
 
 ```js
-isolateSource :: (SourceObj, Scope) -> SourceObj
-
-isolateSink :: (Stream VDOM, Scope) -> Stream VDOM
-```
-
-----
-
-## Step two: Isolation <span class="yellow">scopes</span>
-
-- Idea: Save <span class="yellow">namespace</span> in source and in output VDOM
-
-```js
-class DOMSource
+class DOMSource {
     constructor(namespace) {
         this.namespace = namespace;
     }
 
-    function isolateSource(oldSource, scope) {
-        return new DOMSource(oldSource.namespace.concat(scope));
+    isolateSource(source, scope) {
+        return new DOMSource(source.namespace.concat(scope));
     }
 
-    function isolateSink(sinkStream, scope) {
-        return sinkStream.map(rootNode => ({
+    isolateSink(vdomStream, scope) {
+        return vdomStream.map(rootNode => ({
             ...rootNode,
             data: {
                 ...rootNode.data,
@@ -235,16 +266,67 @@ class DOMSource
 
 ----
 
-# Step three: <span class="yellow">Event management</span>
+## <span class="yellow">Where</span> can we do that?
+
+```js
+type Namespace = Array<Scope>;
+const namespaceMap = new Map<Element, Namespace>();
+
+const isolateModule = {
+    create(emptyVnode, vnode) {
+        if(vnode.data.isolate) { // is isolation root
+            namespaceMap.set(vnode.elm, vnode.data.isolate);
+        }
+    },
+    destroy(vnode) {
+        namespaceMap.delete(vnode.elm)
+    }
+};
+```
 
 ----
 
-## Building the <span class="yellow">bridge</span> between APIs
+## Short <span class="yellow">Overview</span>
 
-> - The DOM API for <span class="yellow">events</span> looks like `element.addEventListener(type, callback)`
-> - We want it to look like `sources.DOM.events(type)`
-> - We want events not to <span class="yellow">bubble</span> outside of their scopes
+![](images/event_handling_1.svg)
 
 ----
 
-## Bubbling 
+## <span class="yellow">Delivering</span> events
+
+![](images/event_handling_2.svg)
+
+----
+
+## <span class="yellow">Data structures</span> to the rescue
+
+> - We need to save our virtual event listeners
+> - Efficiently
+> - With an option to query by namespace
+> - In correct order
+
+----
+
+## Solution: A <span class="yellow">tree</span>
+
+```js
+type Node = [PriorityQueue<Listener>, InternalTree];
+interface InternalTree {
+    [scope: string]: Node;
+}
+```
+
+```hs
+newtype PriorityQueue a = PriorityQueue [a]
+data Node = Node PriorityQueue (Map String Node)
+```
+
+----
+
+<style>
+img[src="images/event_handling_3.svg"] {
+    margin-top: -1.35em !important;
+}
+</style>
+
+![](images/event_handling_3.svg)
