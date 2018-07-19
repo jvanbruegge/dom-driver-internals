@@ -371,20 +371,18 @@ div.slides {
 <h2 id="data-structures-to-the-rescue"><span class="yellow">Data structures</span> to the rescue</h2>
 <ul>
 <li class="fragment">We need to save our virtual event listeners</li>
+<li class="fragment">And the <code>Namespace -&gt; Element</code> mapping</li>
 <li class="fragment">Efficiently</li>
-<li class="fragment">With an option to query by namespace</li>
-<li class="fragment">In correct order</li>
 </ul>
 </section>
 <section class="slide level1">
 
 <h2 id="solution-a-tree">Solution: A <span class="yellow">tree</span></h2>
-<div class="sourceCode" id="cb9"><pre class="sourceCode js"><code class="sourceCode javascript"><a class="sourceLine" id="cb9-1" data-line-number="1">type Node <span class="op">=</span> [PriorityQueue<span class="op">&lt;</span>Listener<span class="op">&gt;,</span> InternalTree]<span class="op">;</span></a>
-<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="kw">interface</span> InternalTree <span class="op">{</span></a>
-<a class="sourceLine" id="cb9-3" data-line-number="3">    [<span class="dt">scope</span><span class="op">:</span> string]<span class="op">:</span> Node<span class="op">;</span></a>
+<div class="sourceCode" id="cb9"><pre class="sourceCode js"><code class="sourceCode javascript"><a class="sourceLine" id="cb9-1" data-line-number="1">type Node<span class="op">&lt;</span>Payload<span class="op">&gt;</span> <span class="op">=</span> [Payload<span class="op">,</span> InternalTree]<span class="op">;</span></a>
+<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="kw">interface</span> InternalTree<span class="op">&lt;</span>Payload<span class="op">&gt;</span> <span class="op">{</span></a>
+<a class="sourceLine" id="cb9-3" data-line-number="3">    [<span class="dt">scope</span><span class="op">:</span> string]<span class="op">:</span> Node<span class="op">&lt;</span>Payload<span class="op">&gt;;</span></a>
 <a class="sourceLine" id="cb9-4" data-line-number="4"><span class="op">}</span></a></code></pre></div>
-<div class="sourceCode" id="cb10"><pre class="sourceCode hs"><code class="sourceCode haskell"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">newtype</span> <span class="dt">PriorityQueue</span> a <span class="fu">=</span> <span class="dt">PriorityQueue</span> [a]</a>
-<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="kw">data</span> <span class="dt">Node</span> <span class="fu">=</span> <span class="dt">Node</span> <span class="dt">PriorityQueue</span> (<span class="dt">Map</span> <span class="dt">String</span> <span class="dt">Node</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode hs"><code class="sourceCode haskell"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">data</span> <span class="dt">Node</span> a <span class="fu">=</span> <span class="dt">Node</span> a (<span class="dt">Map</span> <span class="dt">String</span> (<span class="dt">Node</span> a))</a></code></pre></div>
 </section>
 <section class="slide level1">
 
@@ -394,6 +392,24 @@ img[src="images/event_handling_3.svg"] {
 }
 </style>
 <p><img data-src="images/event_handling_3.svg" /></p>
+</section>
+<section class="slide level1">
+
+<p><img data-src="images/event_handling_4.svg" /></p>
+</section>
+<section class="slide level1">
+
+<h2 id="again-an-overview">Again an <span class="yellow">overview</span></h2>
+<p><img data-src="images/event_handling_5.svg" /></p>
+</section>
+<section id="questions" class="slide level1">
+<h1><span class="yellow">Questions?</span></h1>
+<h4 id="links">Links</h4>
+<ul>
+<li>Slide repo: <a href="https://github.com/jvanbruegge/dom-driver-internals" class="uri">https://github.com/jvanbruegge/dom-driver-internals</a></li>
+<li>Cycle.js: <a href="https://github.com/cyclejs/cyclejs" class="uri">https://github.com/cyclejs/cyclejs</a></li>
+<li>Cycle.js &amp; React compatibility <span class="yellow">(NEW!)</span>: <a href="https://staltz.com/use-react-in-cyclejs-and-vice-versa.html" class="uri">https://staltz.com/use-react-in-cyclejs-and-vice-versa.html</a></li>
+</ul>
 </section>
     </div>
   </div>

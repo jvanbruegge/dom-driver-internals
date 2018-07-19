@@ -301,24 +301,22 @@ const isolateModule = {
 ## <span class="yellow">Data structures</span> to the rescue
 
 > - We need to save our virtual event listeners
+> - And the `Namespace -> Element` mapping
 > - Efficiently
-> - With an option to query by namespace
-> - In correct order
 
 ----
 
 ## Solution: A <span class="yellow">tree</span>
 
 ```js
-type Node = [PriorityQueue<Listener>, InternalTree];
-interface InternalTree {
-    [scope: string]: Node;
+type Node<Payload> = [Payload, InternalTree];
+interface InternalTree<Payload> {
+    [scope: string]: Node<Payload>;
 }
 ```
 
 ```hs
-newtype PriorityQueue a = PriorityQueue [a]
-data Node = Node PriorityQueue (Map String Node)
+data Node a = Node a (Map String (Node a))
 ```
 
 ----
@@ -330,3 +328,23 @@ img[src="images/event_handling_3.svg"] {
 </style>
 
 ![](images/event_handling_3.svg)
+
+----
+
+![](images/event_handling_4.svg)
+
+----
+
+## Again an <span class="yellow">overview</span>
+
+![](images/event_handling_5.svg)
+
+----
+
+# <span class="yellow">Questions?</span>
+
+#### Links
+
+- Slide repo: [https://github.com/jvanbruegge/dom-driver-internals](https://github.com/jvanbruegge/dom-driver-internals)
+- Cycle.js: [https://github.com/cyclejs/cyclejs](https://github.com/cyclejs/cyclejs)
+- Cycle.js & React compatibility <span class="yellow">(NEW!)</span>: [https://staltz.com/use-react-in-cyclejs-and-vice-versa.html](https://staltz.com/use-react-in-cyclejs-and-vice-versa.html)
